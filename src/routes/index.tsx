@@ -8,10 +8,21 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { searchUnsplash } from '@/integrations/unsplash/api'
+import { useState } from 'react'
+import { UnsplashImage } from '@/integrations/unsplash/types'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({
+  component: App,
+})
 
 function App() {
+  const [photos, setPhotos] = useState<UnsplashImage | null>()
+
+  const handleUnsplashSearch = async () => {
+    const data = await searchUnsplash()
+    setPhotos(data)
+    console.log(data)
+  }
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
       <section className="relative py-20 px-6 text-center overflow-hidden">
@@ -28,7 +39,7 @@ function App() {
           Search for an image and we'll convert it to a Cricut SVG for you
         </p>
         <button
-          onClick={() => searchUnsplash()}
+          onClick={handleUnsplashSearch}
           className="mt-6 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-full shadow-lg shadow-indigo-500/30 transition-all active:scale-95"
         >
           Click me!
