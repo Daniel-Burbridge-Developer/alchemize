@@ -16,13 +16,14 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const [photos, setPhotos] = useState<UnsplashImage | null>()
+  const [photos, setPhotos] = useState<UnsplashImage[]>([])
 
   const handleUnsplashSearch = async () => {
-    const data = await searchUnsplash()
+    const data = await searchUnsplash({ data: { query: 'cat' } })
     setPhotos(data)
     console.log(data)
   }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
       <section className="relative py-20 px-6 text-center overflow-hidden">
@@ -44,6 +45,15 @@ function App() {
         >
           Click me!
         </button>
+
+        <div className="flex">
+          {photos &&
+            photos.map((photo) => (
+              <div key={photo.id}>
+                <img src={photo.urls.thumb} alt={photo.description || ''} />
+              </div>
+            ))}
+        </div>
       </section>
     </div>
   )
