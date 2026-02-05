@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { searchUnsplash } from '@/integrations/unsplash/api'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { UnsplashImage } from '@/integrations/unsplash/types'
 
 export const Route = createFileRoute('/')({
@@ -17,15 +17,21 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const [photos, setPhotos] = useState<UnsplashImage[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleUnsplashSearch = async () => {
-    const data = await searchUnsplash({ data: { query: 'cat' } })
+    const data = await searchUnsplash({ data: { query: searchTerm } })
     setPhotos(data)
     console.log(data)
   }
 
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // Convert input to lower case for case-insensitive search
+    setSearchTerm(e.target.value.toLowerCase())
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 p-5">
       <section className="relative py-20 px-6 text-center overflow-hidden">
         <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
           <span className="text-gray-300">ALCHEMIZE</span>
@@ -39,6 +45,16 @@ function App() {
         <p className="text-gray-400 text-lg mt-4">
           Search for an image and we'll convert it to a Cricut SVG for you
         </p>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search here..."
+            onChange={handleSearchChange}
+            value={searchTerm}
+            className="bg-white "
+          />
+          {/* Results list will go here */}
+        </div>
         <button
           onClick={handleUnsplashSearch}
           className="mt-6 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-full shadow-lg shadow-indigo-500/30 transition-all active:scale-95"

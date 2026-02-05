@@ -1,9 +1,6 @@
 import { createApi } from 'unsplash-js'
 import { createServerFn } from '@tanstack/react-start'
 import { env } from '@/env'
-import { ReceiptPoundSterling } from 'lucide-react'
-import { photos } from 'unsplash-js/dist/internals'
-import { R } from 'node_modules/@tanstack/react-query-devtools/build/modern/ReactQueryDevtools-ChNsB-ya'
 
 const unsplash = createApi({
   accessKey: env.UNSPLASH_ACCESS_KEY,
