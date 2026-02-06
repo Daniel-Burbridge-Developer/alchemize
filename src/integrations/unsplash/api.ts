@@ -7,7 +7,7 @@ const unsplash = createApi({
 })
 
 export const searchUnsplash = createServerFn()
-  .inputValidator((data: { query: string }) => data)
+  .inputValidator((input: { query: string }) => input)
   .handler(async ({ data }) => {
     const result = await unsplash.search.getPhotos({ query: data.query })
 
