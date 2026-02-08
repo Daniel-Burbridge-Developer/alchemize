@@ -34,13 +34,14 @@ function App() {
         <p className="mt-4 text-lg text-gray-400">
           Search for an image and we'll convert it to a Cricut SVG for you
         </p>
-        <UnsplashSearcher />
+        {/* <UnsplashSearcher /> */}
+        <ImageQuerySearch />
       </section>
     </div>
   )
 }
 
-const ImageQuerySearchBar = () => {
+const ImageQuerySearch = () => {
   const [input, setInput] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -49,21 +50,13 @@ const ImageQuerySearchBar = () => {
     queryFn: () => searchUnsplash({ data: { query: searchTerm } }),
     enabled: !!searchTerm,
   })
-}
-
-const UnsplashSearcher = () => {
-  const [photos, setPhotos] = useState<UnsplashImage[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
-
-  const handleUnsplashSearch = async () => {
-    const data = await searchUnsplash({ data: { query: searchTerm } })
-    setPhotos(data)
-    console.log(data)
-  }
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Convert input to lower case for case-insensitive search
-    setSearchTerm(e.target.value.toLowerCase())
+    setInput(e.target.value.toLowerCase())
+  }
+
+  const handleSearch = () => {
+    setSearchTerm(input)
   }
 
   return (
@@ -72,29 +65,41 @@ const UnsplashSearcher = () => {
         <InputGroupInput
           placeholder="Search..."
           onChange={handleSearchChange}
-          value={searchTerm}
+          value={input}
         />
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>
-        <InputGroupAddon align="inline-end">{photos.length}</InputGroupAddon>
+        <InputGroupAddon align="inline-end">
+          {data?.length || 0}
+        </InputGroupAddon>
       </InputGroup>
 
-      <Button onClick={handleUnsplashSearch}>Search!</Button>
+      <Button onClick={handleSearch}>Search!</Button>
 
-      <div className="flex">
-        {photos.length > 0 ? (
-          photos.map((photo) => (
-            <div key={photo.id}>
-              <img src={photo.urls.thumb} alt={photo.description || ''} />
-            </div>
-          ))
-        ) : (
-          <div>
-            <p>No images found</p>
-          </div>
-        )}
-      </div>
+      <ImageQuerySearchResults searchTerm={searchTerm} />
+    </div>
+  )
+}
+
+const ImageQuerySearchResults = ({ searchTerm }: { searchTerm: string }) => {
+  const { data } = useQuery({
+    queryKey: ['remoteImageQuery', searchTerm],
+    queryFn: () => searchUnsplash({ data: { query: searchTerm } }),
+    enabled: !!searchTerm,
+  })
+
+  if (!data) {
+    return <p>No Results Found</p>
+  }
+
+  return (
+    <div>
+      {data.map((photo) => (
+        <div id={photo.id}>
+          <img src={photo.urls.thumb} />
+        </div>
+      ))}
     </div>
   )
 }
