@@ -1,5 +1,6 @@
 import { createApi } from 'unsplash-js'
 import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 import { env } from '@/env'
 
 const unsplash = createApi({
@@ -7,8 +8,12 @@ const unsplash = createApi({
 })
 
 export const searchUnsplash = createServerFn()
-  .inputValidator((data: { query: string }) => data)
+  .inputValidator(z.object({ query: z.string().optional() }))
   .handler(async ({ data }) => {
+    if (!data.query) {
+      return []
+    }
+
     const result = await unsplash.search.getPhotos({ query: data.query })
 
     if (result.errors) {
