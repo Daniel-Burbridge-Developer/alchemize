@@ -1,18 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-adapter'
-import { useState } from 'react'
-import type { ChangeEvent } from 'react'
 import { z } from 'zod'
-import { Search } from 'lucide-react'
-
-import { searchUnsplash } from '@/integrations/unsplash/api'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group'
-import { Button } from '@/components/ui/button'
+import { ImageQuerySearchbar } from '@/components/ImageQuerySearchbar'
+import { ImageQuerySearchResults } from '@/components/ImageQuerySearchResults'
 
 const imageSearchSchema = z.object({
   term: z.string().optional(),
@@ -39,82 +29,9 @@ function App() {
         <p className="mt-4 text-lg text-gray-400">
           Search for an image and we'll convert it to a Cricut SVG for you
         </p>
-        <ImageQuerySearch />
+        <ImageQuerySearchbar />
+        <ImageQuerySearchResults />
       </section>
-    </div>
-  )
-}
-
-const ImageQuerySearch = () => {
-  const { term } = Route.useSearch()
-  const navigate = Route.useNavigate()
-
-  const [input, setInput] = useState(term || '')
-
-  const { data } = useQuery({
-    queryKey: ['remoteImageQuery', term ?? ''],
-    queryFn: () => searchUnsplash({ data: { query: term || '' } }),
-    enabled: !!term,
-  })
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value)
-  }
-
-  const handleSearch = () => {
-    navigate({ search: { term: input } })
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSearch()
-    }
-  }
-
-  return (
-    <div>
-      <InputGroup className="max-w-xs">
-        <InputGroupInput
-          placeholder="Search..."
-          onChange={handleSearchChange}
-          onKeyDown={handleKeyDown}
-          value={input}
-        />
-        <InputGroupAddon>
-          <Search />
-        </InputGroupAddon>
-        <InputGroupAddon align="inline-end">
-          {data?.length || 0}
-        </InputGroupAddon>
-      </InputGroup>
-
-      <Button onClick={handleSearch}>Search!</Button>
-
-      <ImageQuerySearchResults />
-    </div>
-  )
-}
-
-const ImageQuerySearchResults = () => {
-  const { term } = Route.useSearch()
-
-  const { data } = useQuery({
-    queryKey: ['remoteImageQuery', term ?? ''],
-    queryFn: () => searchUnsplash({ data: { query: term || '' } }),
-    enabled: !!term,
-  })
-
-  if (!data) {
-    return <p>No Results Found</p>
-  }
-
-  return (
-    <div>
-      {data.map((photo) => (
-        <div key={photo.id}>
-          <img src={photo.urls.thumb} />
-        </div>
-      ))}
     </div>
   )
 }
