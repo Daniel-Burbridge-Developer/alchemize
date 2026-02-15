@@ -18,16 +18,16 @@ export const searchUnsplash = createServerFn()
       query: data.query,
       perPage: 30,
     })
-
     if (result.errors) {
       throw new Error(result.errors[0])
     } else {
+      const totalPages = result.response.total_pages
       const photos = result.response.results.map((photo) => ({
         id: photo.id,
         description: photo.description,
         urls: photo.urls,
       }))
-
+      console.log(`Total Pages: ${totalPages}`)
       return photos
     }
   })
