@@ -17,9 +17,9 @@ export const ImageQuerySearchResults = () => {
   }
 
   return (
-    <div>
+    <div className="colums-2 gap-4 md:columns-4 lg:columns-4">
       {data.map((photo) => (
-        <div key={photo.id}>
+        <div key={photo.id} className="mb-4 break-inside-avoid">
           <img src={photo.urls.thumb} />
         </div>
       ))}

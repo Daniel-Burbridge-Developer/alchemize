@@ -40,7 +40,7 @@ export const ImageQuerySearchbar = () => {
   }
 
   return (
-    <div>
+    <div className="flex gap-4">
       <InputGroup className="max-w-xs">
         <InputGroupInput
           placeholder="Search..."

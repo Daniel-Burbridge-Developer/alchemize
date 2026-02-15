@@ -14,7 +14,10 @@ export const searchUnsplash = createServerFn()
       return []
     }
 
-    const result = await unsplash.search.getPhotos({ query: data.query })
+    const result = await unsplash.search.getPhotos({
+      query: data.query,
+      perPage: 30,
+    })
 
     if (result.errors) {
       throw new Error(result.errors[0])
