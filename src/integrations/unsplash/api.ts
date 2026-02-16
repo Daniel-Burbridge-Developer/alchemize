@@ -3,15 +3,32 @@ import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { env } from '@/env'
 
+interface UnsplashResponse {
+  photos: {
+    id: string
+    description: string | null
+    urls: {
+      full: string
+      raw: string
+      regular: string
+      small: string
+      thumb: string
+    }
+  }[]
+  meta: {
+    totalPages: number | null
+  }
+}
+
 const unsplash = createApi({
   accessKey: env.UNSPLASH_ACCESS_KEY,
 })
 
 export const searchUnsplash = createServerFn()
   .inputValidator(z.object({ query: z.string().optional() }))
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<UnsplashResponse> => {
     if (!data.query) {
-      return []
+      return { photos: [], meta: { totalPages: null } }
     }
 
     const result = await unsplash.search.getPhotos({
@@ -27,7 +44,12 @@ export const searchUnsplash = createServerFn()
         description: photo.description,
         urls: photo.urls,
       }))
-      console.log(`Total Pages: ${totalPages}`)
-      return photos
+
+      const unsplashResponse: UnsplashResponse = {
+        photos: photos,
+        meta: { totalPages },
+      }
+
+      return unsplashResponse
     }
   })

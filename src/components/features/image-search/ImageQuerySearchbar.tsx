@@ -52,7 +52,7 @@ export const ImageQuerySearchbar = () => {
           <Search />
         </InputGroupAddon>
         <InputGroupAddon align="inline-end">
-          {data?.length || 0}
+          {data?.photos.length || 0}
         </InputGroupAddon>
       </InputGroup>
 
