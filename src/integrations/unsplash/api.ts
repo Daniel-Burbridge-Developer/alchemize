@@ -25,12 +25,15 @@ const unsplash = createApi({
 })
 
 export const searchUnsplash = createServerFn()
-  .inputValidator(z.object({ query: z.string().optional() }))
+  .inputValidator(
+    z.object({ query: z.string().optional(), page: z.int().optional() }),
+  )
   .handler(async ({ data }): Promise<UnsplashResponse> => {
     if (!data.query) {
       return { photos: [], meta: { totalPages: null } }
     }
 
+    // check the unsplash API, see how to fetch specific page.
     const result = await unsplash.search.getPhotos({
       query: data.query,
       perPage: 30,
