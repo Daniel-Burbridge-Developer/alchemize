@@ -1,8 +1,6 @@
-import { useState } from 'react'
-import type { ChangeEvent } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { searchUnsplash } from '@/integrations/unsplash/api'
+import type { ChangeEvent } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -19,11 +17,17 @@ export const ImageQuerySearchbar = () => {
 
   const [input, setInput] = useState(term || '')
 
-  const { data } = useQuery({
-    queryKey: ['remoteImageQuery', term ?? ''],
-    queryFn: () => searchUnsplash({ data: { query: term || '' } }),
-    enabled: !!term,
-  })
+  // const { data } = useInfiniteQuery({
+  //   queryKey: ['remoteImagequery', term ?? ''],
+  //   queryFn: ({ pageParam }) =>
+  //     searchUnsplash({ data: { query: term || '', page: pageParam } }),
+  //   initialPageParam: 1,
+  //   getNextPageParam: (lastPage, pages) =>
+  //     pages.length < (lastPage.meta.totalPages || 0)
+  //       ? pages.length + 1
+  //       : undefined,
+  //   enabled: !!term,
+  // })
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -52,7 +56,7 @@ export const ImageQuerySearchbar = () => {
           <Search />
         </InputGroupAddon>
         <InputGroupAddon align="inline-end">
-          {data?.photos.length || 0}
+          {/* {data?.pages.reduce((total, page) => total + page.photos.length, 0)} */}
         </InputGroupAddon>
       </InputGroup>
 
