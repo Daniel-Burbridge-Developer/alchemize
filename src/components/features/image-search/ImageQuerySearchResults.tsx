@@ -49,7 +49,7 @@ export const ImageQuerySearchResults = () => {
   }
 
   return (
-    <div className="colums-2 gap-4 md:columns-4 lg:columns-4">
+    <div className="columns-2 gap-4 md:columns-4 lg:columns-4">
       {data.pages.map((group, i) => (
         <React.Fragment key={i}>
           {group.photos.map((photo) => (
@@ -57,12 +57,11 @@ export const ImageQuerySearchResults = () => {
               <img src={photo.urls.thumb} />
             </div>
           ))}
-
-          <div ref={sentinelRef} className="flex h-10 w-full justify-center">
-            {isFetchingNextPage ? <Spinner /> : null}
-          </div>
         </React.Fragment>
       ))}
+      <div ref={sentinelRef} className="flex h-10 w-full justify-center">
+        {isFetchingNextPage ? <Spinner /> : null}
+      </div>
     </div>
   )
 }
